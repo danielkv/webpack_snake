@@ -52,10 +52,12 @@ function start() {
     state.snake = snakePieces;
     state.canvasContext = ctx;
 
+    console.log(state);
+
     state.interval = setInterval(draw, 50);
 }
 
-function calculateGame() {
+function continueGame() {
     const snakePieces = state.snake;
     let fruits = state.fruits;
     let growSnake = false;
@@ -77,11 +79,14 @@ function calculateGame() {
 
     // snake
     const snake = moveSnake(snakePieces, state.direction, growSnake);
+    state.snake = snake;
 
     const head = snake[0];
     const tail = snake.slice(1);
 
-    if (tail.some((piece) => piece.x === head.x && piece.y === head.y)) resetGame(ctx);
+    const collision = tail.find((piece) => piece.x === head.x && piece.y === head.y);
+    if (collision) console.log(collision, head, tail);
+    return !collision;
 }
 
 function draw() {
@@ -89,7 +94,7 @@ function draw() {
 
     resetCanvas(ctx);
 
-    calculateGame();
+    if (!continueGame()) resetGame(ctx);
 
     // drawing
     drawSnake(ctx, state.snake);

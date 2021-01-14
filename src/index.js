@@ -14,7 +14,5 @@ document.addEventListener('keypress', (e) => {
 
     const newDirection = directions[e.key];
 
-    console.log(newDirection);
-
     changeDirection(newDirection);
 });
