@@ -1,10 +1,13 @@
 const settings = {
-    fruitColor: '#ff0000',
-    fruitSize: 20,
-    snakeColor: '#000000',
-    snakePieceSize: 20,
-    canvasWidth: 700,
-    canvasHeigth: 700,
+    fruitColor: '#dd33aa',
+    fruitSize: 12,
+    snakeColor: '#333333',
+    canvasBackground: '#f5f5f5',
+    initialSnakeLength: 12,
+    snakePieceSize: 12,
+    canvasWidth: 720,
+    canvasHeigth: 720,
+    gameSpeed: 40, // the smaller number, faster the game
 };
 
 const state = {
@@ -44,7 +47,7 @@ function createCanvas() {
 }
 
 function start() {
-    const snakePieces = createSnakeTail(createRandomSnakeHead(), 8, state.direction);
+    const snakePieces = createSnakeTail(createRandomSnakeHead(), settings.initialSnakeLength, state.direction);
     const fruit = createRandomFruit();
     const ctx = canvas.getContext('2d');
 
@@ -52,9 +55,7 @@ function start() {
     state.snake = snakePieces;
     state.canvasContext = ctx;
 
-    console.log(state);
-
-    state.interval = setInterval(draw, 50);
+    state.interval = setInterval(draw, settings.gameSpeed);
 }
 
 function continueGame() {
@@ -111,6 +112,9 @@ function resetCanvas(context) {
 
     // Restore the transform
     context.restore();
+
+    context.fillStyle = settings.canvasBackground;
+    context.fillRect(0, 0, settings.canvasWidth, settings.canvasHeigth);
 }
 
 function drawSnakePiece(ctx, { x, y }) {
@@ -233,8 +237,15 @@ function createRandomFruit() {
 }
 
 function drawFruit(ctx, { x, y }) {
+    //ctx.fillRect(x, y, settings.fruitSize, settings.fruitSize);
+    const centerX = x + settings.fruitSize / 2;
+    const centerY = y + settings.fruitSize / 2;
+    const radius = settings.fruitSize / 2;
+
+    ctx.beginPath();
     ctx.fillStyle = settings.fruitColor;
-    ctx.fillRect(x, y, settings.fruitSize, settings.fruitSize);
+    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+    ctx.fill();
 }
 
 function drawFruits(ctx, fruits) {
